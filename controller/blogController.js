@@ -111,6 +111,7 @@ exports.publishBlog = async (req, res) => {
         $set: {
           title: title,
           content: content,
+          status: "true"
         },
       }
     );
@@ -120,12 +121,23 @@ exports.publishBlog = async (req, res) => {
         .status(200)
         .json({ status: true, message: "Data saved successfully" });
     } else {
-      return res
-        .status(400)
-        .json({
-          status: false,
-          message: "Some error occured while publishing blog",
-        });
+      return res.status(400).json({
+        status: false,
+        message: "Some error occured while publishing blog",
+      });
+    }
+  } catch (e) {
+    return res.status(500).json({ message: "Some error occured" });
+  }
+};
+
+exports.getAllPosts = async (req, res) => {
+  try {
+    const result = await blogModel.find({status: "true"}).limit(5);
+    if (result) {
+      return res.status(200).json({ status: true, data: result });
+    } else {
+      return res.status(400).json({ status: false, data: null });
     }
   } catch (e) {
     return res.status(500).json({ message: "Some error occured" });

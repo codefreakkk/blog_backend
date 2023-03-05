@@ -8,6 +8,7 @@ app.use(express.json());
 app.use(cors({ credentials: true, origin: ["http://localhost:3000"] }));
 
 const blogRoute = require("./routes/blogRoute");
+const userRoute = require("./routes/userRoute");
 
 app.use(
   fileUpload({
@@ -17,6 +18,7 @@ app.use(
 
 
 app.use("/api/v1", blogRoute);
+app.use("/api/v1", userRoute);
 
 
 const PORT = process.env.PORT || 8000;
