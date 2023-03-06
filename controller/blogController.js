@@ -95,37 +95,56 @@ exports.getBlogById = async (req, res) => {
     if (result) {
       return res.status(200).json({ status: true, data: result });
     } else {
-      return res.status(400).json({ status: false, data: null });
+      return res.status(500).json({ status: false, data: null });
     }
   } catch (e) {
     return res.status(500).json({ message: "Some error occured" });
   }
 };
 
+
+// need to work on this feature - need to add validations and other stuffs
 exports.publishBlog = async (req, res) => {
   try {
-    const { id, content, title } = req.body;
-    const result = await blogModel.findOneAndUpdate(
-      { _id: id },
-      {
-        $set: {
-          title: title,
-          content: content,
-          status: "true"
-        },
-      }
-    );
+    const { id, content, title, userName } = req.body;
+    const previewImage = req.files.previewImage;
+    const path = previewImage.tempFilePath;
 
-    if (result) {
-      return res
-        .status(200)
-        .json({ status: true, message: "Data saved successfully" });
-    } else {
-      return res.status(400).json({
-        status: false,
-        message: "Some error occured while publishing blog",
-      });
-    }
+    cloudinary.uploader.upload(path, async (err, r) => {
+      if (err) {
+        return res
+          .status(400)
+          .json({ status: false, message: "Some error occured" });
+      }
+      const url = r.url;
+
+      if (r) {
+        const result = await blogModel.findOneAndUpdate(
+          { _id: id },
+          {
+            $set: {
+              title: title,
+              content: content,
+              userName: userName,
+              previewImage: url,
+              status: "true",
+            },
+          }
+        );
+
+        if (result) {
+          return res
+            .status(200)
+            .json({ status: true, message: "Data saved successfully" });
+        } else {
+          console.log("else");
+          return res.status(400).json({
+            status: false,
+            message: "Some error occured while publishing blog",
+          });
+        }
+      }
+    });
   } catch (e) {
     return res.status(500).json({ message: "Some error occured" });
   }
@@ -133,7 +152,7 @@ exports.publishBlog = async (req, res) => {
 
 exports.getAllPosts = async (req, res) => {
   try {
-    const result = await blogModel.find({status: "true"}).limit(5);
+    const result = await blogModel.find({ status: "true" }).limit(5);
     if (result) {
       return res.status(200).json({ status: true, data: result });
     } else {
