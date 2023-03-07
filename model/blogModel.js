@@ -6,6 +6,7 @@ const blog = mongoose.Schema({
   },
   title: {
     type: String,
+    default: "Your title"
   },
   images: {
     type: [],
