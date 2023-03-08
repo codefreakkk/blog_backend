@@ -10,11 +10,12 @@ cloudinary.config({
 
 exports.createPost = async (req, res) => {
   try {
+    const uid = req.user._id.toString();
     const result = await blogModel.create({
-      userId: "",
+      userId: uid,
       images: [],
       content: "",
-      title: ""
+      title: "",
     });
 
     if (result) {
@@ -106,13 +107,35 @@ exports.getBlogById = async (req, res) => {
 // need to work on this feature - need to add validations and other stuffs
 exports.publishBlog = async (req, res) => {
   try {
+    const { id, content, title, userName } = req.body;
+
+    // if filee not found
     if (!req.files) {
-      return res
-        .status(200)
-        .json({ status: false, message: "Please add preview image" });
+      const result = await blogModel.findOneAndUpdate(
+        { _id: id },
+        {
+          $set: {
+            title: title,
+            content: content,
+            userName: userName,
+            status: "true",
+          },
+        }
+      );
+
+      if (result) {
+        return res
+          .status(200)
+          .json({ status: true, message: "Data saved successfully" });
+      } else {
+        console.log("else");
+        return res.status(200).json({
+          status: false,
+          message: "Some error occured while publishing blog",
+        });
+      }
     }
 
-    const { id, content, title, userName } = req.body;
     const previewImage = req.files.previewImage;
     const path = previewImage.tempFilePath;
 
@@ -175,7 +198,9 @@ exports.getAllPosts = async (req, res) => {
 
 exports.getPosts = async (req, res) => {
   try {
-    const result = await blogModel.find().sort({ $natural: -1 });
+    const result = await blogModel
+      .find({ status: "true" })
+      .sort({ $natural: -1 });
     if (result) {
       return res.status(200).json({ status: true, data: result });
     } else {
@@ -188,7 +213,8 @@ exports.getPosts = async (req, res) => {
 
 exports.getDrafts = async (req, res) => {
   try {
-    const result = await blogModel.find({ status: "false" });
+    const uid = req.user._id.toString();
+    const result = await blogModel.find({ userId: uid });
     if (result) {
       return res.status(200).json({ status: true, data: result });
     } else {

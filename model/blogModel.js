@@ -2,11 +2,12 @@ const mongoose = require("mongoose");
 
 const blog = mongoose.Schema({
   userId: {
-    type: String,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "user",
   },
   title: {
     type: String,
-    default: "Your title"
+    default: "Your title",
   },
   images: {
     type: [],

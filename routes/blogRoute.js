@@ -7,7 +7,7 @@ const auth = require("../middleware/auth");
 router.get("/getblogbyid/:id", auth, blogController.getBlogById);
 router.get("/getallposts", blogController.getAllPosts);
 router.get("/getposts", blogController.getPosts);
-router.get("/drafts", blogController.getDrafts);
+router.get("/drafts", auth, blogController.getDrafts);
 router.post("/createpost", auth, blogController.createPost);
 router.post("/uploadimg", auth, blogController.addImage);
 router.post("/deleteimg", auth, blogController.deleteImg);
