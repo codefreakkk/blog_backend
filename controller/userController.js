@@ -8,7 +8,7 @@ exports.signUp = async (req, res) => {
     const email = await userModel.findOne({ userEmail: userEmail });
     if (email) {
       return res.status(200).json({
-        status: true,
+        status: false,
         message: `user already signup with ${userEmail}`,
       });
     }

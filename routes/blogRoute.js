@@ -12,5 +12,6 @@ router.post("/createpost", auth, blogController.createPost);
 router.post("/uploadimg", auth, blogController.addImage);
 router.post("/deleteimg", auth, blogController.deleteImg);
 router.post("/publishblog", auth, blogController.publishBlog);
+router.delete("/deletepost/:id", auth, blogController.deletePost)
 
 module.exports = router;

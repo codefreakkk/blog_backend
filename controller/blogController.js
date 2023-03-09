@@ -224,3 +224,18 @@ exports.getDrafts = async (req, res) => {
     return res.status(500).json({ message: "Some error occured" });
   }
 };
+
+exports.deletePost = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const result = await blogModel.deleteOne({_id: id});
+    if (result) {
+      return res.status(200).json({status: true, message: "Your post was deleted"})
+    }
+    else {
+      return res.status(200).json({status: false, message: "Your post was not deleted"})
+    }
+  } catch (e) {
+    return res.status(500).json({ message: "Some error ocured" });
+  }
+};
