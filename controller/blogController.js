@@ -185,7 +185,7 @@ exports.getAllPosts = async (req, res) => {
     const result = await blogModel
       .find({ status: "true" })
       .sort({ $natural: -1 })
-      .limit(5);
+      .limit(7);
     if (result) {
       return res.status(200).json({ status: true, data: result });
     } else {
