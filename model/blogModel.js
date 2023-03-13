@@ -27,6 +27,10 @@ const blog = mongoose.Schema({
     type: String,
     default: "false",
   },
+  appearStatus: {
+    type: String,
+    default: "false",
+  },
 });
 
 module.exports = new mongoose.model("blog", blog);

@@ -183,9 +183,9 @@ exports.publishBlog = async (req, res) => {
 exports.getAllPosts = async (req, res) => {
   try {
     const result = await blogModel
-      .find({ status: "true" })
+      .find({ appearStatus: "true" })
       .sort({ $natural: -1 })
-      .limit(7);
+      .limit(5);
     if (result) {
       return res.status(200).json({ status: true, data: result });
     } else {
@@ -198,9 +198,11 @@ exports.getAllPosts = async (req, res) => {
 
 exports.getPosts = async (req, res) => {
   try {
+    const {count} = req.body;
     const result = await blogModel
       .find({ status: "true" })
-      .sort({ $natural: -1 });
+      .sort({ $natural: -1 })
+      .limit(count);
     if (result) {
       return res.status(200).json({ status: true, data: result });
     } else {
