@@ -5,6 +5,10 @@ const blog = mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "user",
   },
+  categoryId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "categoryModel",
+  },
   title: {
     type: String,
     default: "Your title",

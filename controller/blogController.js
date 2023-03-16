@@ -201,7 +201,6 @@ exports.getPosts = async (req, res) => {
     const {count} = req.body;
     const result = await blogModel
       .find({ status: "true" })
-      .sort({ $natural: -1 })
       .limit(count);
     if (result) {
       return res.status(200).json({ status: true, data: result });
