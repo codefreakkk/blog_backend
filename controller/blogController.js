@@ -128,7 +128,6 @@ exports.publishBlog = async (req, res) => {
           .status(200)
           .json({ status: true, message: "Data saved successfully" });
       } else {
-        console.log("else");
         return res.status(200).json({
           status: false,
           message: "Some error occured while publishing blog",
@@ -198,10 +197,8 @@ exports.getAllPosts = async (req, res) => {
 
 exports.getPosts = async (req, res) => {
   try {
-    const {count} = req.body;
-    const result = await blogModel
-      .find({ status: "true" })
-      .limit(count);
+    const { count } = req.body;
+    const result = await blogModel.find({ status: "true" }).limit(count);
     if (result) {
       return res.status(200).json({ status: true, data: result });
     } else {
@@ -229,14 +226,27 @@ exports.getDrafts = async (req, res) => {
 exports.deletePost = async (req, res) => {
   try {
     const id = req.params.id;
-    const result = await blogModel.deleteOne({_id: id});
+    const result = await blogModel.deleteOne({ _id: id });
     if (result) {
-      return res.status(200).json({status: true, message: "Your post was deleted"})
-    }
-    else {
-      return res.status(200).json({status: false, message: "Your post was not deleted"})
+      return res
+        .status(200)
+        .json({ status: true, message: "Your post was deleted" });
+    } else {
+      return res
+        .status(200)
+        .json({ status: false, message: "Your post was not deleted" });
     }
   } catch (e) {
     return res.status(500).json({ message: "Some error ocured" });
   }
 };
+
+exports.getBlogByCategory = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const {count} = req.body;
+    console.log(count);
+  } catch (e) {
+    return res.status(500).json({message: "Some error occured"});
+  }
+}
