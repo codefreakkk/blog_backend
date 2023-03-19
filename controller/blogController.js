@@ -109,7 +109,7 @@ exports.publishBlog = async (req, res) => {
   try {
     const { id, content, title, userName } = req.body;
 
-    // if filee not found
+    // if file not found
     if (!req.files) {
       const result = await blogModel.findOneAndUpdate(
         { _id: id },
@@ -244,9 +244,11 @@ exports.deletePost = async (req, res) => {
 exports.getBlogByCategory = async (req, res) => {
   try {
     const id = req.params.id;
-    const {count} = req.body;
-    console.log(count);
+    const { count } = req.body;
+
+    const result = await blogModel.find({ categoryId: id }).limit(count);
+    console.log(result);
   } catch (e) {
-    return res.status(500).json({message: "Some error occured"});
+    return res.status(500).json({ message: "Some error occured" });
   }
-}
+};
