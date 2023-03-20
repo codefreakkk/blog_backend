@@ -107,8 +107,8 @@ exports.getBlogById = async (req, res) => {
 // need to work on this feature - need to add validations and other stuffs
 exports.publishBlog = async (req, res) => {
   try {
-    const { id, content, title, userName } = req.body;
-
+    const { id, content, title, userName, cat } = req.body;
+    console.log(`cat is ${cat}`);
     // if file not found
     if (!req.files) {
       const result = await blogModel.findOneAndUpdate(
@@ -119,6 +119,7 @@ exports.publishBlog = async (req, res) => {
             content: content,
             userName: userName,
             status: "true",
+            categoryId: cat,
           },
         }
       );
@@ -156,6 +157,7 @@ exports.publishBlog = async (req, res) => {
               userName: userName,
               previewImage: url,
               status: "true",
+              categoryId: cat,
             },
           }
         );
@@ -247,7 +249,11 @@ exports.getBlogByCategory = async (req, res) => {
     const { count } = req.body;
 
     const result = await blogModel.find({ categoryId: id }).limit(count);
-    console.log(result);
+    if (result) {
+      return res.status(200).json({status: true, data: result});
+    } else {
+      return res.status(400).json({status: false, data: null});
+    }
   } catch (e) {
     return res.status(500).json({ message: "Some error occured" });
   }
